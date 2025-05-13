@@ -13,7 +13,7 @@ function Contact() {
       message: e.target.message.value
     };
 
-    fetch('http://localhost:3001/submit', {
+    fetch('https://kavyasri-portfolio.onrender.com/submit', { // ✅ your deployed backend
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)

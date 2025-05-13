@@ -12,6 +12,13 @@ const DATA_FILE = path.join(__dirname, 'submissions.json');
 app.use(cors());
 app.use(express.json());
 
+const cors = require('cors');
+app.use(cors({
+  origin: 'https://vercel.com/kavyas-projects-33508890',
+  methods: ['GET', 'POST']
+}));
+
+
 // Endpoint to handle form submissions
 app.post('/submit', (req, res) => {
   const newSubmission = req.body;
