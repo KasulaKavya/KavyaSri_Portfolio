@@ -208,13 +208,15 @@ button:hover {
 .about {
   margin: 2rem;
   padding: 2.5rem;
-  background: rgba(30, 30, 50, 0.3); /* semi-transparent dark */
+  background: rgba(0, 0, 0, 0.3); /* transparent dark layer */
   border-radius: 16px;
-  border: 1px solid rgba(0, 255, 255, 0.2); /* subtle border */
-  backdrop-filter: blur(10px); /* frosted glass effect */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
-  box-shadow: 0 0 40px rgba(0, 255, 255, 0.12);
+  border: 1px solid rgba(0, 255, 255, 0.15); /* subtle neon border */
+  backdrop-filter: blur(12px); /* frosted glass effect */
+  -webkit-backdrop-filter: blur(12px); /* Safari support */
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.08); /* soft glow */
+  color: #f0f0f0; /* ensure text remains visible */
 }
+
 
 
 /* === Projects === */
