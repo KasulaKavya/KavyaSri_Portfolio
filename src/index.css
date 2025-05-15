@@ -208,10 +208,12 @@ button:hover {
 .about {
   margin: 2rem;
   padding: 2.5rem;
-  background: linear-gradient(to right, #363244, #1c1c2a); 
-  border-radius: 16px; 
-  border: 1px solid #2c2c2c; 
-  box-shadow: 0 0 40px rgba(0, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05); /* subtle transparency */
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.15); /* soft border */
+  backdrop-filter: blur(10px); /* glassmorphism blur */
+  -webkit-backdrop-filter: blur(10px); /* for Safari support */
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.12); /* glowing outline */
 }
 
 /* === Projects === */
