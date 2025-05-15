@@ -38,7 +38,7 @@ function Contact() {
       <section className="contact-two-col">
         <div className="contact-form-card">
           <h2>Get in Touch</h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} name="contact">
             <div className="field-group">
               <label htmlFor="name">Name</label>
               <input type="text" name="from_name" id="name" required />
