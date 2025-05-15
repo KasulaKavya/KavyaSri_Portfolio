@@ -1,92 +1,47 @@
-import React, { useState } from 'react';
-import ParticlesBackground from '../components/ParticlesBackground';
-import '../index.css';
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
-function Contact() {
-  const [status, setStatus] = useState('');
-  const [sending, setSending] = useState(false);
+const app = express();
+const PORT = process.env.PORT || 3001;
+const DATA_FILE = path.join(__dirname, 'submissions.json');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSending(true);
-    setStatus('');
+app.use(express.json());
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://your-vercel-url.vercel.app'  // use your actual Vercel frontend domain
+  ]
+}));
 
-    const formData = {
-      from_name: e.target.from_name.value,
-      from_email: e.target.from_email.value,
-      phone: e.target.phone.value,
-      message: e.target.message.value
-    };
+app.get('/', (req, res) => {
+  res.send('🟢 Form submission API is running');
+});
 
-    try {
-      const response = await fetch('http://localhost:3001/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
+app.post('/submit', (req, res) => {
+  const newSubmission = req.body;
 
-      const data = await response.json();
+  fs.readFile(DATA_FILE, 'utf8', (err, data) => {
+    let submissions = [];
 
-      if (response.ok) {
-        setStatus('✅ Message sent successfully!');
-        e.target.reset();
-      } else {
-        console.error('Server error:', data);
-        setStatus('❌ Failed to submit. Please try again.');
+    if (!err && data) {
+      try {
+        submissions = JSON.parse(data);
+      } catch {
+        return res.status(500).json({ error: 'Invalid data format' });
       }
-    } catch (error) {
-      console.error('Submission error:', error);
-      setStatus('❌ Could not connect to the server.');
     }
 
-    setSending(false);
-  };
+    submissions.push(newSubmission);
 
-  return (
-    <>
-      <ParticlesBackground />
+    fs.writeFile(DATA_FILE, JSON.stringify(submissions, null, 2), (err) => {
+      if (err) return res.status(500).json({ error: 'Failed to save submission' });
+      res.status(200).json({ message: 'Form submitted successfully!' });
+    });
+  });
+});
 
-      <section className="contact-two-col">
-        <div className="contact-form-card">
-          <h2>Get in Touch</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="field-group">
-              <label htmlFor="name">Name</label>
-              <input type="text" name="from_name" id="name" required />
-            </div>
-            <div className="field-group">
-              <label htmlFor="email">Email</label>
-              <input type="email" name="from_email" id="email" required />
-            </div>
-            <div className="field-group">
-              <label htmlFor="phone">Phone</label>
-              <input type="tel" name="phone" id="phone" />
-            </div>
-            <div className="field-group">
-              <label htmlFor="message">Message</label>
-              <textarea name="message" id="message" rows="4" required></textarea>
-            </div>
-
-            {status && (
-              <p style={{ marginBottom: '1rem', color: status.startsWith('✅') ? 'lightgreen' : 'salmon' }}>
-                {status}
-              </p>
-            )}
-
-            <button type="submit" className="send-btn" disabled={sending}>
-              {sending ? 'Sending...' : 'Send ✉️'}
-            </button>
-          </form>
-        </div>
-
-        <div className="thankyou-card-modern">
-          <h2>Thank You.</h2>
-          <p>We’ll be in touch shortly!</p>
-          <button className="next-btn">Next →</button>
-        </div>
-      </section>
-    </>
-  );
-}
-
-export default Contact;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});
