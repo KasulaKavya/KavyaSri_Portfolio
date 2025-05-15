@@ -208,7 +208,7 @@ button:hover {
 .about {
   margin: 2rem;
   padding: 2.5rem;
-  background: linear-gradient(to backdrop-filter, #363244, #1c1c2a); 
+  background: linear-gradient(to right, #363244, #1c1c2a); 
   border-radius: 16px; 
   border: 1px solid #2c2c2c; 
   box-shadow: 0 0 40px rgba(0, 255, 255, 0.12);
