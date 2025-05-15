@@ -208,13 +208,14 @@ button:hover {
 .about {
   margin: 2rem;
   padding: 2.5rem;
-  background: rgba(255, 255, 255, 0.05); /* subtle transparency */
+  background: rgba(30, 30, 50, 0.3); /* semi-transparent dark */
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.15); /* soft border */
-  backdrop-filter: blur(10px); /* glassmorphism blur */
-  -webkit-backdrop-filter: blur(10px); /* for Safari support */
-  box-shadow: 0 0 40px rgba(0, 255, 255, 0.12); /* glowing outline */
+  border: 1px solid rgba(0, 255, 255, 0.2); /* subtle border */
+  backdrop-filter: blur(10px); /* frosted glass effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.12);
 }
+
 
 /* === Projects === */
 .projects {
