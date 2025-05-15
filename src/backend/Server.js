@@ -4,14 +4,16 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3001; // ✅ Required for Render compatibility
+const PORT = process.env.PORT || 3001;
 const DATA_FILE = path.join(__dirname, 'submissions.json');
 
 app.use(express.json());
+
+// ✅ Allow CORS from Vercel
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://kavyas-projects-33508890-kavya-sri-portfolio.vercel.app'
+    'https://kavya-sri-portfolio-myp8pw4mb-kavyas-projects-33508890.vercel.app'
   ],
   methods: ['GET', 'POST'],
   credentials: true
@@ -23,7 +25,6 @@ app.get('/', (req, res) => {
 
 app.post('/submit', (req, res) => {
   const newSubmission = req.body;
-  console.log('📩 New submission received:', newSubmission);
 
   fs.readFile(DATA_FILE, 'utf8', (err, data) => {
     let submissions = [];
@@ -31,7 +32,7 @@ app.post('/submit', (req, res) => {
     if (!err && data) {
       try {
         submissions = JSON.parse(data);
-      } catch (e) {
+      } catch {
         return res.status(500).json({ error: 'Invalid JSON' });
       }
     }
@@ -39,7 +40,8 @@ app.post('/submit', (req, res) => {
     submissions.push(newSubmission);
 
     fs.writeFile(DATA_FILE, JSON.stringify(submissions, null, 2), (err) => {
-      if (err) return res.status(500).json({ error: 'Failed to write data' });
+      if (err) return res.status(500).json({ error: 'Failed to write' });
+
       res.status(200).json({ message: 'Form submitted successfully!' });
     });
   });

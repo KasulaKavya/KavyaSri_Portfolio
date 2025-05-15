@@ -1,34 +1,45 @@
 import React, { useState } from 'react';
 import ParticlesBackground from '../components/ParticlesBackground';
-import emailjs from '@emailjs/browser';
 import '../index.css';
 
 function Contact() {
   const [status, setStatus] = useState('');
   const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSending(true);
     setStatus('');
 
-    emailjs.sendForm(
-      'service_qel6iun',   
-      'template_pld8twp',    
-      e.target,
-      'bo-1GIU7Zs-5hCIfM'      
-    )
-    .then(() => {
-      setStatus('✅ Message sent successfully!');
-      e.target.reset();
-    })
-    .catch((error) => {
-      console.error('EmailJS Error:', error);
-      setStatus('❌ Failed to send message. Please try again.');
-    })
-    .finally(() => {
+    const formData = {
+      from_name: e.target.from_name.value,
+      from_email: e.target.from_email.value,
+      phone: e.target.phone.value,
+      message: e.target.message.value
+    };
+
+    try {
+      const response = await fetch(
+        'https://kavyasri-portfolio.onrender.com/submit', // ✅ your backend endpoint
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        }
+      );
+
+      if (response.ok) {
+        setStatus('✅ Message sent successfully!');
+        e.target.reset();
+      } else {
+        setStatus('❌ Failed to send message. Try again.');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setStatus('❌ Could not connect to the server.');
+    } finally {
       setSending(false);
-    });
+    }
   };
 
   return (
