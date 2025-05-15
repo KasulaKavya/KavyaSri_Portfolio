@@ -1,47 +1,90 @@
-const express = require('express');
-const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
+import React, { useState } from 'react';
+import ParticlesBackground from '../components/ParticlesBackground';
+import '../index.css';
 
-const app = express();
-const PORT = process.env.PORT || 3001;
-const DATA_FILE = path.join(__dirname, 'submissions.json');
+function Contact() {
+  const [status, setStatus] = useState('');
+  const [sending, setSending] = useState(false);
 
-app.use(express.json());
-app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://your-vercel-url.vercel.app'  // use your actual Vercel frontend domain
-  ]
-}));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSending(true);
+    setStatus('');
 
-app.get('/', (req, res) => {
-  res.send('🟢 Form submission API is running');
-});
+    const formData = {
+      from_name: e.target.from_name.value,
+      from_email: e.target.from_email.value,
+      phone: e.target.phone.value,
+      message: e.target.message.value
+    };
 
-app.post('/submit', (req, res) => {
-  const newSubmission = req.body;
+    try {
+      const response = await fetch('https://your-backend-name.onrender.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
 
-  fs.readFile(DATA_FILE, 'utf8', (err, data) => {
-    let submissions = [];
+      const data = await response.json();
 
-    if (!err && data) {
-      try {
-        submissions = JSON.parse(data);
-      } catch {
-        return res.status(500).json({ error: 'Invalid data format' });
+      if (response.ok) {
+        setStatus('✅ Message sent successfully!');
+        e.target.reset();
+      } else {
+        setStatus('❌ Failed to submit. Please try again.');
       }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setStatus('❌ Could not connect to the server.');
     }
 
-    submissions.push(newSubmission);
+    setSending(false);
+  };
 
-    fs.writeFile(DATA_FILE, JSON.stringify(submissions, null, 2), (err) => {
-      if (err) return res.status(500).json({ error: 'Failed to save submission' });
-      res.status(200).json({ message: 'Form submitted successfully!' });
-    });
-  });
-});
+  return (
+    <>
+      <ParticlesBackground />
+      <section className="contact-two-col">
+        <div className="contact-form-card">
+          <h2>Get in Touch</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="field-group">
+              <label htmlFor="name">Name</label>
+              <input type="text" name="from_name" id="name" required />
+            </div>
+            <div className="field-group">
+              <label htmlFor="email">Email</label>
+              <input type="email" name="from_email" id="email" required />
+            </div>
+            <div className="field-group">
+              <label htmlFor="phone">Phone</label>
+              <input type="tel" name="phone" id="phone" />
+            </div>
+            <div className="field-group">
+              <label htmlFor="message">Message</label>
+              <textarea name="message" id="message" rows="4" required></textarea>
+            </div>
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+            {status && (
+              <p style={{ marginBottom: '1rem', color: status.startsWith('✅') ? 'lightgreen' : 'salmon' }}>
+                {status}
+              </p>
+            )}
+
+            <button type="submit" className="send-btn" disabled={sending}>
+              {sending ? 'Sending...' : 'Send ✉️'}
+            </button>
+          </form>
+        </div>
+
+        <div className="thankyou-card-modern">
+          <h2>Thank You.</h2>
+          <p>We’ll be in touch shortly!</p>
+          <button className="next-btn">Next →</button>
+        </div>
+      </section>
+    </>
+  );
+}
+
+export default Contact;
