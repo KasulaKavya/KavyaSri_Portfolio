@@ -13,17 +13,17 @@ function Contact() {
     setStatus('');
 
     emailjs.sendForm(
-      'service_qel6iun',   
-      'template_pld8twp',    
+      'service_qel6iun',    // ✅ Replace with your EmailJS Service ID
+      'template_pld8twp',   // ✅ Replace with your Template ID
       e.target,
-      'bo-1GIU7Zs-5hCIfM'      
+      'bo-1GIU7Zs-5hCIfM'   // ✅ Replace with your Public Key
     )
     .then(() => {
       setStatus('✅ Message sent successfully!');
       e.target.reset();
     })
     .catch((error) => {
-      console.error('EmailJS Error:', error);
+      console.error('❌ EmailJS Error:', error);
       setStatus('❌ Failed to send message. Please try again.');
     })
     .finally(() => {
@@ -63,7 +63,7 @@ function Contact() {
             )}
 
             <button type="submit" className="send-btn" disabled={sending}>
-              {sending ? 'Sending...' : 'Send ✉️'}
+              {sending ? '⏳ Sending...' : 'Send ✉️'}
             </button>
           </form>
         </div>
