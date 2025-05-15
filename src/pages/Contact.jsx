@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ParticlesBackground from '../components/ParticlesBackground';
 import '../index.css';
 
 function Contact() {
-  const handleSubmit = (e) => {
+  const [status, setStatus] = useState('');
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSending(true);
+    setStatus('');
 
     const formData = {
       from_name: e.target.from_name.value,
@@ -13,25 +18,34 @@ function Contact() {
       message: e.target.message.value
     };
 
-    fetch('https://kavyasri-portfolio.onrender.com/submit', { // ✅ your deployed backend
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
-      .then(res => res.text())
-      .then(msg => {
-        alert(msg);
-        e.target.reset();
-      })
-      .catch(err => {
-        console.error('Submission error:', err);
-        alert('Something went wrong. Please try again.');
+    try {
+      const response = await fetch('http://localhost:3001/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
       });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus('✅ Message sent successfully!');
+        e.target.reset();
+      } else {
+        console.error('Server error:', data);
+        setStatus('❌ Failed to submit. Please try again.');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setStatus('❌ Could not connect to the server.');
+    }
+
+    setSending(false);
   };
 
   return (
     <>
       <ParticlesBackground />
+
       <section className="contact-two-col">
         <div className="contact-form-card">
           <h2>Get in Touch</h2>
@@ -52,7 +66,16 @@ function Contact() {
               <label htmlFor="message">Message</label>
               <textarea name="message" id="message" rows="4" required></textarea>
             </div>
-            <button type="submit" className="send-btn">Send ✉️</button>
+
+            {status && (
+              <p style={{ marginBottom: '1rem', color: status.startsWith('✅') ? 'lightgreen' : 'salmon' }}>
+                {status}
+              </p>
+            )}
+
+            <button type="submit" className="send-btn" disabled={sending}>
+              {sending ? 'Sending...' : 'Send ✉️'}
+            </button>
           </form>
         </div>
 
