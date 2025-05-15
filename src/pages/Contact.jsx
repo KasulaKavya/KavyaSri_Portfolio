@@ -19,13 +19,11 @@ function Contact() {
     };
 
     try {
-      const response = await fetch('https://your-backend-name.onrender.com/submit', {
+      const response = await fetch('https://kavyasri-form-api.onrender.com/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-
-      const data = await response.json();
 
       if (response.ok) {
         setStatus('✅ Message sent successfully!');
@@ -44,6 +42,7 @@ function Contact() {
   return (
     <>
       <ParticlesBackground />
+
       <section className="contact-two-col">
         <div className="contact-form-card">
           <h2>Get in Touch</h2>
