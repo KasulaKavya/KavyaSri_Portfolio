@@ -15,7 +15,7 @@ function Contact() {
     const payload = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch('https://dashboard.render.com/project/prj-d0jk7uidbo4c73dh6590/api/contact', {
+      const response = await fetch('https://kavyasri-portfolio.onrender.com/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
