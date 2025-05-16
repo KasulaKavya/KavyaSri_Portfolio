@@ -426,7 +426,7 @@ button:hover {
   border-radius: 16px;
   border: 1px solid #2c2c2c;
   box-shadow: 0 0 40px rgba(0, 255, 255, 0.12);
-  min-height: 470px; /* Optional: consistent height */
+  min-height: 510px; /* Optional: consistent height */
   color: #fffdfd;
 }
 

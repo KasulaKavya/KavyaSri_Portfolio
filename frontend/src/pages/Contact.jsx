@@ -21,12 +21,13 @@ function Contact() {
         body: JSON.stringify(payload)
       });
 
-      if (response.ok) {
+      const result = await response.json();
+
+      if (response.ok && result.message?.includes('success')) {
         setStatus('✅ Message sent successfully!');
         e.target.reset();
       } else {
-        const data = await response.json();
-        setStatus(`❌ Failed: ${data.error || 'Please try again.'}`);
+        setStatus(`❌ Failed: ${result.error || 'Submission failed.'}`);
       }
     } catch (error) {
       console.error('❌ Submission error:', error);
@@ -36,14 +37,13 @@ function Contact() {
     }
   };
 
-return (
+  return (
     <>
       <ParticlesBackground />
-
       <section className="contact-two-col">
         <div className="contact-form-card">
           <h2>Get in Touch</h2>
-          <form onSubmit={handleSubmit} name="contact">
+          <form onSubmit={handleSubmit}>
             <div className="field-group">
               <label htmlFor="name">Name</label>
               <input type="text" name="from_name" id="name" required />
@@ -62,22 +62,24 @@ return (
             </div>
 
             {status && (
-              <p style={{ marginBottom: '1rem', color: status.startsWith('✅') ? 'lightgreen' : 'salmon' }}>
+              <p style={{ color: status.startsWith('✅') ? 'green' : 'red' }}>
                 {status}
               </p>
             )}
 
-            <button type="submit" className="send-btn" disabled={sending}>
-              {sending ? '⏳ Sending...' : 'Send ✉️'}
+            <button disabled={sending}>
+              {sending ? 'Sending...' : 'Send'}
             </button>
           </form>
         </div>
 
-        <div className="thankyou-card-modern">
-          <h2>Thank You.</h2>
-          <p>We’ll be in touch shortly!</p>
-          <button className="next-btn">Next →</button>
-        </div>
+        {status.startsWith('✅') && (
+          <div className="thankyou-card-modern">
+            <h2>Thank You.</h2>
+            <p>We’ll be in touch shortly!</p>
+            <button className="next-btn">Next →</button>
+          </div>
+        )}
       </section>
     </>
   );
