@@ -102,7 +102,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "homepage": ".",
+  "homepage": "http://.",
   "devDependencies": {
     "gh-pages": "^6.3.0"
   },
@@ -159,5 +159,12 @@
     "presets": [
       "react-app"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KasulaKavya/KavyaSri_Portfolio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KasulaKavya/KavyaSri_Portfolio/issues"
   }
 }
